@@ -1,0 +1,69 @@
+=== TweetScroll Widget ===
+Contributors: pixel-industry
+Donate link: 
+Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
+Requires at least: 3.3
+Tested up to: 3.5.1
+Stable tag: 1.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+TweetScroll is widget that displays latest tweets from you Twitter account using new oAuth API 1.1.
+
+== Description ==
+
+TweetScroll is widget that displays latest tweets from you Twitter account using new oAuth API 1.1.
+This simple widget can be used in any website/blog.
+
+Twitter recently shutdown their API 1.0 and forces usage new API 1.1. Because of that change plugin requires creating Twitter application on Twitter Devs which is used for API calls.
+
+We made this plugin because of lack of simple plugin with some animation options.
+
+
+== Installation ==
+
+1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Add widget to sidebar and enter required fields: username and four keys(read below how to obtain keys).
+
+Recent updates to Twitter API (API v1.1) requires authentication to fetch Tweets. Please follow the steps below to start using TweetScroll widget:
+
+= Creating Twitter Application =
+Navigate to [Twitter Developers](https://dev.twitter.com/apps/) page and login using your Twitter credentials.
+Select ‘Create new application’ and enter the application details.
+* The name and description can be anything you like really, but you can’t use ‘Twitter’ in the name.
+* The website field can be your main website and doesn’t have to be the site where your Twitter feed or feeds are located.
+* Callback URL can be left blank.
+Enter the CAPTCHA info and click create
+On the next details screen, click ‘create my access token’. You may need to refresh the page after a few seconds if it doesn’t appear automatically.
+Make a note of the Consumer key, Consumer secret, Access token and Access token secret.
+
+
+== Frequently asked questions ==
+
+= Where can I get support =
+
+Use support tab above for any questions you have.
+
+= What are the plugin requirements =
+
+You need to obtain four keys from Twitter Devs:
+* Consumer Key
+* Consumer Secret
+* Access Token
+* Access Token Secret
+
+Read Installation section for details.
+
+== Screenshots ==
+
+1. http://pixel-industry.com/resources/tweetscroll/twitter_devs.jpg
+2. http://pixel-industry.com/resources/tweetscroll/widget_tweetscroll.JPG
+
+== Changelog ==
+
+1.0
+* Initial release
+
+== Upgrade notice ==
+Initial release.

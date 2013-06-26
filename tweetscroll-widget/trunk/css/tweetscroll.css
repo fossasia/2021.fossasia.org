@@ -1,0 +1,13 @@
+.tweets-list-container{
+    width: 100%;
+    overflow: hidden;
+}
+
+.tweet-list {
+    position: relative;
+    list-style-type: none;
+}
+
+.tweet-list li {
+    padding-bottom: 10px;
+}
