@@ -10,6 +10,7 @@
 
   ----------------------------------------------------------------------------------- */
 
+// declare constants
 if (!defined('TS_PLUGIN_DIR'))
     define('TS_PLUGIN_DIR', untrailingslashit(dirname(__FILE__)));
 
