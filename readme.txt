@@ -63,8 +63,8 @@ Read Installation section for details.
 
 == Changelog ==
 
-1.0
-* Initial release
+= 1.0 =
+Initial release
 
 == Upgrade notice ==
 Initial release.
