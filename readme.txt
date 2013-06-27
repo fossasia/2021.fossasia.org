@@ -57,8 +57,9 @@ Read Installation section for details.
 
 == Screenshots ==
 
-1. http://pixel-industry.com/resources/tweetscroll/twitter_devs.jpg
-2. http://pixel-industry.com/resources/tweetscroll/widget_tweetscroll.JPG
+1. Widget options
+2. Frontend view of tweets
+3. Twitter Devs keys
 
 == Changelog ==
 
