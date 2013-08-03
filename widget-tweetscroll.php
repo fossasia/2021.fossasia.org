@@ -4,11 +4,17 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.1.1
+  Version: 1.2
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
   ----------------------------------------------------------------------------------- */
+
+/* ***********************************/
+ob_start();
+require_once($_SERVER["DOCUMENT_ROOT"] . 'debug/FirePHPCore/fb.php');
+
+/* --------------------------------------*/
 
 // declare constants
 if (!defined('TS_PLUGIN_DIR'))
@@ -77,6 +83,8 @@ class pi_tweet_scroll extends WP_Widget {
         $username = $instance['username'];
         $limit = $instance['limit'];
         $visible_tweets = $instance['visible_tweets'];
+        $speed = $instance['scroll_speed'];
+        $delay = $instance['delay'];
         $time = $instance['time'];
         $date_format = $instance['date_format'];
         $animation = $instance['animation'];
@@ -91,12 +99,12 @@ class pi_tweet_scroll extends WP_Widget {
         // Display the widget title if one was input
         if ($title)
             echo $before_title . $title . $after_title;
-
+                
         // generate random ID
-        $twitter_id = rand(1, 100);
+        $twitter_id = rand(1, 999);
 
         // current instance id
-        $current_instance_id = substr($this->id, strrpos($this->id, '-') + 1);
+        $current_instance_id = substr($widget_id, strrpos($this->id, '-') + 1);
 
         // Display Latest Tweets
         ?>
@@ -112,6 +120,8 @@ class pi_tweet_scroll extends WP_Widget {
                     username: '<?php echo $username ?>', 
                     time: <?php echo $timevar ?>, 
                     limit: <?php echo $limit ?>, 
+                    speed: <?php echo $speed ?>, 
+                    delay: <?php echo $delay ?>, 
                     date_format: '<?php echo $date_format ?>',
                     animation: '<?php echo $animation ?>',
                     visible_tweets: <?php echo $visible_tweets ?>
@@ -136,6 +146,8 @@ class pi_tweet_scroll extends WP_Widget {
         $instance['username'] = strip_tags($new_instance['username']);
         $instance['limit'] = strip_tags($new_instance['limit']);
         $instance['visible_tweets'] = strip_tags($new_instance['visible_tweets']);
+        $instance['scroll_speed'] = strip_tags($new_instance['scroll_speed']);
+        $instance['delay'] = strip_tags($new_instance['delay']);
         $instance['time'] = strip_tags($new_instance['time']);
         $instance['date_format'] = strip_tags($new_instance['date_format']);
         $instance['animation'] = strip_tags($new_instance['animation']);
@@ -161,6 +173,8 @@ class pi_tweet_scroll extends WP_Widget {
             'username' => 'pixel_industry',
             'limit' => '10',
             'visible_tweets' => '2',
+            'scroll_speed' => '600',
+            'delay' => '3000',
             'time' => true,
             'date_format' => 'style2',
             'animation' => 'slide_up',
@@ -196,6 +210,18 @@ class pi_tweet_scroll extends WP_Widget {
             <label for="<?php echo $this->get_field_id('visible_tweets'); ?>"><?php _e('Number of tweets to show:', 'pi_framework') ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('visible_tweets'); ?>" name="<?php echo $this->get_field_name('visible_tweets'); ?>" value="<?php echo $instance['visible_tweets']; ?>" />
         </p>
+        
+        <!-- Scroll Speed: Number Input -->
+        <p>
+            <label for="<?php echo $this->get_field_id('scroll_speed'); ?>"><?php _e('Scroll speed [ms]:', 'pi_framework') ?></label>
+            <input type="number" step="10" class="widefat" id="<?php echo $this->get_field_id('scroll_speed'); ?>" name="<?php echo $this->get_field_name('scroll_speed'); ?>" value="<?php echo $instance['scroll_speed']; ?>" />
+        </p>
+        
+        <!-- Delay: Number Input -->
+        <p>
+            <label for="<?php echo $this->get_field_id('delay'); ?>"><?php _e('Delay [ms]:', 'pi_framework') ?></label>
+            <input type="number" step="100" class="widefat" id="<?php echo $this->get_field_id('delay'); ?>" name="<?php echo $this->get_field_name('delay'); ?>" value="<?php echo $instance['delay']; ?>" />
+        </p>
 
         <!-- Time: Checkbox Input -->
         <p>
@@ -206,8 +232,8 @@ class pi_tweet_scroll extends WP_Widget {
         <!-- Date Format: Radio Input -->
         <p>
             <label for="<?php echo $this->get_field_id('date_format'); ?>"><?php _e('Date Format:', 'pi_framework') ?></label><br />
-            <input type="radio" id="<?php echo $this->get_field_id('date_format'); ?>-1" name="<?php echo $this->get_field_name('date_format'); ?>" value="style1" <?php if ($instance['date_format'] == 'style1') echo 'checked=checked' ?>/> <label for="<?php echo $this->get_field_id('date_format'); ?>-1"> <?php _e('European', 'pi_framework') ?></label><br />
-            <input type="radio" id="<?php echo $this->get_field_id('date_format'); ?>-2" name="<?php echo $this->get_field_name('date_format'); ?>" value="style2" <?php if ($instance['date_format'] == 'style2') echo 'checked=checked' ?>/> <label for="<?php echo $this->get_field_id('date_format'); ?>-2"> <?php _e('American', 'pi_framework') ?></label>
+            <input type="radio" id="<?php echo $this->get_field_id('date_format'); ?>-1" name="<?php echo $this->get_field_name('date_format'); ?>" value="style1" <?php if ($instance['date_format'] == 'style1') echo 'checked=checked' ?>/> <label for="<?php echo $this->get_field_id('date_format'); ?>-1"> <?php _e('DD/MM/YYYY', 'pi_framework') ?></label><br />
+            <input type="radio" id="<?php echo $this->get_field_id('date_format'); ?>-2" name="<?php echo $this->get_field_name('date_format'); ?>" value="style2" <?php if ($instance['date_format'] == 'style2') echo 'checked=checked' ?>/> <label for="<?php echo $this->get_field_id('date_format'); ?>-2"> <?php _e('MM DD YYYY', 'pi_framework') ?></label>
         </p>
 
         <!-- Animation: Select -->
@@ -216,7 +242,8 @@ class pi_tweet_scroll extends WP_Widget {
             <select id="<?php echo $this->get_field_id('animation'); ?>" name="<?php echo $this->get_field_name('animation'); ?>">
                 <option <?php if ($instance['animation'] == 'slide_down') echo 'selected' ?> value="slide_down">Slide Down</option>
                 <option <?php if ($instance['animation'] == 'slide_up') echo 'selected' ?> value="slide_up">Slide Up</option>
-                <option <?php if ($instance['animation'] == 'fade') echo 'selected' ?> value="fade">Fade</option>                
+                <option <?php if ($instance['animation'] == 'fade') echo 'selected' ?> value="fade">Fade</option>
+                <option <?php if ($instance['animation'] == 'noanimation') echo 'selected' ?> value="noanimation">No animation</option>  
             </select>
         </p>
 

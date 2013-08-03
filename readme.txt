@@ -4,7 +4,7 @@ Donate link:
 Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.0
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,14 @@ Twitter recently shutdown their API 1.0 and forces usage new API 1.1. Because of
 
 We made this plugin because of lack of simple plugin with some animation options.
 
+Features:
+Number of tweets to load.
+Number of tweets to show.
+Three animations styles: Slider up, Slider down, Fade and without animation.
+Two Date format styles.
+Show/hide timestamp.
+Set scrolling speed.
+Set delay time.
 
 == Installation ==
 
@@ -62,6 +70,14 @@ Read Installation section for details.
 3. Twitter Devs keys
 
 == Changelog ==
+
+= 1.2 =
+Added option to disable animation.
+Added option for Scroll speed control.
+Added option for Delay time control.
+
+= 1.1 =
+Updates to AJAX calls.
 
 = 1.0 =
 Initial release

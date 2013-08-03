@@ -15,6 +15,8 @@
         var defaults = {
             limit: 5,                   //number of tweets to fetch
             visible_tweets: 2,           //number of tweets to be visible
+            speed : 600,
+            delay: 3000,
             username: 'envatowebdesign', 	//@username tweets to display. can be multiple usernames e.g. [philipbeel, vmrkela]
             time: false,                //display date
             replies: false,		//filter out @replys
@@ -23,6 +25,21 @@
         };
         //overwrite the defaults
         var tweetscrollOptions = $.extend({}, defaults, options);
+        
+        // verify if speed value is number
+        if(isNaN(tweetscrollOptions.speed)){
+            tweetscrollOptions.speed = 600;
+        }
+        
+        // verify if speed value is number
+        if(isNaN(tweetscrollOptions.delay)){
+            tweetscrollOptions.delay = 3000;
+        }
+        
+        if(tweetscrollOptions.delay < tweetscrollOptions.speed){
+            tweetscrollOptions.delay = tweetscrollOptions.speed * 1.10;
+            console.log(tweetscrollOptions.delay);
+        }
         
         // Wordpress widget change
         tweetscrollOptions['instance_id'] = $(this).attr('data-instance-id');        
@@ -66,7 +83,7 @@
                             setInitialListHeight($allTweets);
                             setInterval(function(){
                                 animateTweets($allTweets);
-                            }, 3000);     
+                            }, tweetscrollOptions.delay);     
                         }
                     });
                     
@@ -83,11 +100,14 @@
                     setInitialListHeight($allTweets);
                     setInterval(function(){
                         animateTweets($allTweets);
-                    }, 3000);   
+                    }, tweetscrollOptions.delay);   
                 });   
             }
             
             function animateTweets($allTweets) {
+                var scrollSpeed = tweetscrollOptions.speed;
+                
+                
                 switch(tweetscrollOptions.animation){
                     case 'slide_down':
                         var itemHeight = $allTweets.find('li').outerHeight();                        
@@ -107,7 +127,7 @@
                         $allTweets.animate(
                         {
                             'bottom' : -lastItemHeight
-                        }, 'slow', 'linear', function(){
+                        }, scrollSpeed, 'linear', function(){
                             /* put the last item before the first item */
                             $allTweets.find('li:first').before($allTweets.find('li:last'));
 
@@ -134,7 +154,7 @@
                         $allTweets.animate(
                         {
                             'top' : -itemHeight
-                        }, 'slow', 'linear', function(){
+                        }, scrollSpeed, 'linear', function(){
                             /* put the last item before the first item */
                             $allTweets.find('li:last').after($allTweets.find('li:first'));
 
@@ -154,7 +174,7 @@
                         $allTweets.animate(
                         {
                             'opacity' : 0
-                        }, 'slow', 'linear', function(){
+                        }, scrollSpeed, 'linear', function(){
                             /* put the last item before the first item */
                             var selectorString = $allTweets.find('li:lt(' + tweetscrollOptions.visible_tweets  + ')');                            
                             $allTweets.find('li:last').after($(selectorString));
