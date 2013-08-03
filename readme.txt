@@ -72,9 +72,9 @@ Read Installation section for details.
 == Changelog ==
 
 = 1.2 =
-Added option to disable animation.
-Added option for Scroll speed control.
-Added option for Delay time control.
+* Added option to disable animation.
+* Added option for Scroll speed control.
+* Added option for Delay time control.
 
 = 1.1 =
 Updates to AJAX calls.
