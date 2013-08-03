@@ -19,14 +19,14 @@ Twitter recently shutdown their API 1.0 and forces usage new API 1.1. Because of
 
 We made this plugin because of lack of simple plugin with some animation options.
 
-Features:
-Number of tweets to load.
-Number of tweets to show.
-Three animations styles: Slider up, Slider down, Fade and without animation.
-Two Date format styles.
-Show/hide timestamp.
-Set scrolling speed.
-Set delay time.
+= Features =
+* Number of tweets to load.
+* Number of tweets to show.
+* Three animations styles: Slider up, Slider down, Fade and without animation.
+* Two Date format styles.
+* Show/hide timestamp.
+* Set scrolling speed.
+* Set delay time.
 
 == Installation ==
 
