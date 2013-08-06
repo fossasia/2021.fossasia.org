@@ -3,7 +3,7 @@ Contributors: pixel-industry
 Donate link: 
 Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
 Requires at least: 3.3
-Tested up to: 3.5.1
+Tested up to: 3.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -25,8 +25,11 @@ Twitter recently shutdown their API 1.0 and forces usage new API 1.1. Because of
 * Show/hide timestamp.
 * Set scrolling speed.
 * Set delay time.
+* Caching tweets (Fetch tweets periodically)
+* Open link in new tab/window
 
 We made this plugin because of lack of simple plugin with some animation options. Hope you will find it usefull.
+For all questions use Support tab section or contact us through our [website](http://pixel-industry.com/).
 
 == Installation ==
 
@@ -70,6 +73,11 @@ Read Installation section for details.
 3. Twitter Devs keys
 
 == Changelog ==
+
+= 1.2.1 =
+* Added option for opening link in new tab/window.
+* Added option for caching tweets.
+* Removed call to debug script.
 
 = 1.2 =
 * Added option to disable animation.

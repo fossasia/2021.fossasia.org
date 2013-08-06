@@ -21,7 +21,8 @@
             time: false,                //display date
             replies: false,		//filter out @replys
             date_format: 'style1',
-            animation: 'slide_up'
+            animation: 'slide_up',
+            url_new_window: false
         };
         //overwrite the defaults
         var tweetscrollOptions = $.extend({}, defaults, options);
@@ -38,7 +39,6 @@
         
         if(tweetscrollOptions.delay < tweetscrollOptions.speed){
             tweetscrollOptions.delay = tweetscrollOptions.speed * 1.10;
-            console.log(tweetscrollOptions.delay);
         }
         
         // Wordpress widget change
@@ -248,6 +248,7 @@
                 if(i == 0){
                     $tweetList = $('<ul class="tweet-list">');
                 }
+                
                 //handle @reply filtering if required
                 if (tweetscrollOptions.replies === false) {
                     if (item.in_reply_to_status_id === null) {
@@ -272,7 +273,7 @@
                         $tweetList.find('.tweet_link_' + i).append('<small> ' + tweetMonth + ' ' + item.created_at.substr(8, 2) + ' ' + item.created_at.substr(26,4) + ' ' + item.created_at.substr(11,8) + '</small>');
                     }
  
-                }
+                }                
   
             });
             
@@ -281,6 +282,16 @@
                     $(this).prependTo( $(this).parent() );
                 });
             }
+            
+            //check how to open link, same page or in new window                
+            if(tweetscrollOptions.url_new_window == true){
+                $tweetList.find('a').each(function(){
+                    $(this).attr({
+                        target: '_BLANK'
+                    });
+                });
+            }
+                
             return $tweetList;
         }
     }
