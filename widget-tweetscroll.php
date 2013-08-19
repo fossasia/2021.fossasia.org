@@ -10,12 +10,6 @@
 
   ----------------------------------------------------------------------------------- */
 
-/* ***********************************/
-ob_start();
-require_once($_SERVER["DOCUMENT_ROOT"] . 'debug/FirePHPCore/fb.php');
-
-/* --------------------------------------*/
-
 // declare constants
 if (!defined('TS_PLUGIN_DIR'))
     define('TS_PLUGIN_DIR', untrailingslashit(dirname(__FILE__)));
@@ -77,7 +71,7 @@ class pi_tweet_scroll extends WP_Widget {
 
     function widget($args, $instance) {
         extract($args);
-        fb($args);
+
         // Our variables from the widget settings
         $title = apply_filters('widget_title', $instance['title']);
         $username = $instance['username'];
