@@ -4,11 +4,17 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.2.1
+  Version: 1.2.2
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
   ----------------------------------------------------------------------------------- */
+
+/* ***********************************/
+ob_start();
+require_once($_SERVER["DOCUMENT_ROOT"] . 'debug/FirePHPCore/fb.php');
+
+/* --------------------------------------*/
 
 // declare constants
 if (!defined('TS_PLUGIN_DIR'))
@@ -71,7 +77,7 @@ class pi_tweet_scroll extends WP_Widget {
 
     function widget($args, $instance) {
         extract($args);
-
+        fb($args);
         // Our variables from the widget settings
         $title = apply_filters('widget_title', $instance['title']);
         $username = $instance['username'];
@@ -94,8 +100,9 @@ class pi_tweet_scroll extends WP_Widget {
         // generate random ID
         $twitter_id = rand(1, 999);
 
+        $instance_args = !empty($widget_id) ? $widget_id : $id;
         // current instance id
-        $current_instance_id = substr($widget_id, strrpos($this->id, '-') + 1);
+        $current_instance_id = substr($instance_args, strrpos($instance_args, '-') + 1);
 
         // Display Latest Tweets
         ?>

@@ -27,6 +27,7 @@ Twitter recently shutdown their API 1.0 and forces usage new API 1.1. Because of
 * Set delay time.
 * Caching tweets (Fetch tweets periodically)
 * Open link in new tab/window
+* Supports [Widget Shortcode](http://wordpress.org/plugins/widget-shortcode/) plugin (Add widget to any page/post as shortcode)
 
 We made this plugin because of lack of simple plugin with some animation options. Hope you will find it usefull.
 For all questions use Support tab section or contact us through our [website](http://pixel-industry.com/).
@@ -73,6 +74,9 @@ Read Installation section for details.
 3. Twitter Devs keys
 
 == Changelog ==
+
+= 1.2.2 = 
+* Added support for Widget Shortcode plugin
 
 = 1.2.1 =
 * Added option for opening link in new tab/window.
