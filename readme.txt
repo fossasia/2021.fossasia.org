@@ -1,5 +1,5 @@
 === TweetScroll Widget ===
-Contributors: pixel-industry
+Contributors: pixel-industry,vmrkela
 Donate link: 
 Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
 Requires at least: 3.3
