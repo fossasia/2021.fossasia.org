@@ -2,7 +2,7 @@
  * TweetScroll jQuery Plugin
  * Author: Pixel Industry
  * Author URL : http://pixel-industry.com
- * Version: 1.2
+ * Version: 1.2.3
  * 
  * jQuery plugin to load latest Twitter tweets.
  * 
@@ -37,9 +37,9 @@
             tweetscrollOptions.delay = 3000;
         }
         
-        if(tweetscrollOptions.delay < tweetscrollOptions.speed){
-            tweetscrollOptions.delay = tweetscrollOptions.speed * 1.10;
-        }
+        //        if(tweetscrollOptions.delay < tweetscrollOptions.speed){
+        //            tweetscrollOptions.delay = tweetscrollOptions.speed * 1.10;
+        //        }
         
         // Wordpress widget change
         tweetscrollOptions['instance_id'] = $(this).attr('data-instance-id');        
@@ -98,9 +98,8 @@
                     $allTweets = createHtml(data, tweetscrollOptions);
                     $($allTweets).appendTo(act);
                     setInitialListHeight($allTweets);
-                    setInterval(function(){
-                        animateTweets($allTweets);
-                    }, tweetscrollOptions.delay);   
+                    animateTweets($allTweets);                   
+  
                 });   
             }
             
@@ -135,6 +134,10 @@
                             $allTweets.css({
                                 'bottom' : 0
                             });
+                            
+                            window.setTimeout(function(){
+                                animateTweets($allTweets);
+                            }, tweetscrollOptions.delay);
                         });
                         break;
                     case 'slide_up':
@@ -149,7 +152,6 @@
                         $allTweets.parent().css({
                             'height' : containerSize
                         });
-                        
                         /* animate the carousel */
                         $allTweets.animate(
                         {
@@ -162,7 +164,12 @@
                             $allTweets.css({
                                 'top' : 0
                             });
+                            
+                            window.setTimeout(function(){
+                                animateTweets($allTweets);
+                            }, tweetscrollOptions.delay);
                         });
+                        
                         break;
                     case 'fade':
                         var itemHeight = $allTweets.outerHeight();
@@ -190,6 +197,10 @@
                             $allTweets.animate({
                                 opacity: 1
                             });
+                            
+                            window.setTimeout(function(){
+                                animateTweets($allTweets);
+                            }, tweetscrollOptions.delay);
                             
                         });
                         break;

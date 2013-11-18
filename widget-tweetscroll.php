@@ -4,7 +4,7 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.2.2
+  Version: 1.2.3
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
@@ -217,7 +217,7 @@ class pi_tweet_scroll extends WP_Widget {
 
         <!-- Delay: Number Input -->
         <p>
-            <label for="<?php echo $this->get_field_id('delay'); ?>"><?php _e('Delay [ms]:', 'pi_framework') ?></label>
+            <label for="<?php echo $this->get_field_id('delay'); ?>"><?php _e('Delay [ms] (set 0 for continuous scroll):', 'pi_framework') ?></label>
             <input type="number" step="100" class="widefat" id="<?php echo $this->get_field_id('delay'); ?>" name="<?php echo $this->get_field_name('delay'); ?>" value="<?php echo $instance['delay']; ?>" />
         </p>
 

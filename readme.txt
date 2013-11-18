@@ -3,7 +3,7 @@ Contributors: pixel-industry,vmrkela
 Donate link: 
 Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
 Requires at least: 3.3
-Tested up to: 3.6
+Tested up to: 3.7
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,9 @@ Read Installation section for details.
 3. Twitter Devs keys
 
 == Changelog ==
+
+= 1.2.3 = 
+* Script modified to allow continuous scrolling
 
 = 1.2.2 = 
 * Added support for Widget Shortcode plugin
