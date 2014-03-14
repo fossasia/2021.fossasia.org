@@ -6,8 +6,26 @@
 .tweet-list {
     position: relative;
     list-style-type: none;
+    padding: 0;
 }
 
 .tweet-list li {
     padding-bottom: 10px;
+}
+
+/* Twitter logo before tweet */
+
+.tweet-list.twitter-logo li {
+    background: url('../img/tweet.png') no-repeat;
+    padding-left: 40px;
+    background-position-y: 5px;
+}
+
+.tweet-list.twitter-logo li.profile-image{
+    background: none;
+}
+
+.tweet-list li.profile-image{
+    padding-left: 60px;
+    min-height: 60px;
 }

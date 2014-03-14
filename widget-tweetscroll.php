@@ -4,7 +4,7 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.2.3
+  Version: 1.3
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
@@ -83,6 +83,8 @@ class pi_tweet_scroll extends WP_Widget {
         $date_format = $instance['date_format'];
         $animation = $instance['animation'];
         $url_new_window = $instance['url_new_window'];
+        $logo = $instance['logo'];
+        $profile_image = $instance['profile_image'];
 
         // Before widget (defined by theme functions file)
         echo $before_widget;
@@ -91,6 +93,10 @@ class pi_tweet_scroll extends WP_Widget {
         if ($title)
             echo $before_title . $title . $after_title;
 
+//        $username = trim($username);
+//        $usernames = split(',', $username);
+//        if (count($usernames) > 1)
+//            $username = "[" . join(',', $usernames) . "]";
         // generate random ID
         $twitter_id = rand(1, 999);
 
@@ -103,25 +109,29 @@ class pi_tweet_scroll extends WP_Widget {
         <div id="tweets-list-id-<?php echo $twitter_id ?>" class="tweets-list-container aside" data-instance-id="<?php echo $current_instance_id ?>"></div>
 
         <?php
-        $time ? $timevar = 'true' : $timevar = 'false';
-        $url_new_window ? $url_new_window_var = 'true' : $url_new_window_var = 'false';
+        $timevar = $time ? 'true' : 'false';
+        $url_new_window_var = $url_new_window ? 'true' : 'false';
+        $logo_var = $logo ? 'true' : 'false';
+        $profile_image_var = $profile_image ? 'true' : 'false';
         ?>
         <script>
-            jQuery(function($){
+            jQuery(function($) {
                 /* ================ TWEETS SCROLL ================ */
                 jQuery('#tweets-list-id-<?php echo $twitter_id ?>').tweetscroll({
-                    username: '<?php echo $username ?>', 
-                    time: <?php echo $timevar ?>, 
-                    limit: <?php echo $limit ?>, 
-                    speed: <?php echo $speed ?>, 
-                    delay: <?php echo $delay ?>, 
+                    username: '<?php echo $username ?>',
+                    time: <?php echo $timevar ?>,
+                    limit: <?php echo $limit ?>,
+                    speed: <?php echo $speed ?>,
+                    delay: <?php echo $delay ?>,
                     date_format: '<?php echo $date_format ?>',
                     animation: '<?php echo $animation ?>',
                     url_new_window: <?php echo $url_new_window_var ?>,
-                    visible_tweets: <?php echo $visible_tweets ?>
+                    visible_tweets: <?php echo $visible_tweets ?>,
+                    logo: <?php echo $logo_var ?>,
+                    profile_image: <?php echo $profile_image_var ?>,
                 });
             });
-                                                                                                                                                            
+
         </script>
         <?php
         // After widget (defined by theme functions file)
@@ -146,6 +156,8 @@ class pi_tweet_scroll extends WP_Widget {
         $instance['date_format'] = strip_tags($new_instance['date_format']);
         $instance['animation'] = strip_tags($new_instance['animation']);
         $instance['url_new_window'] = strip_tags($new_instance['url_new_window']);
+        $instance['logo'] = strip_tags($new_instance['logo']);
+        $instance['profile_image'] = strip_tags($new_instance['profile_image']);
         $instance['caching'] = strip_tags($new_instance['caching']);
         $instance['consumer_key'] = strip_tags($new_instance['consumer_key']);
         $instance['consumer_secret'] = strip_tags($new_instance['consumer_secret']);
@@ -175,6 +187,8 @@ class pi_tweet_scroll extends WP_Widget {
             'date_format' => 'style2',
             'animation' => 'slide_up',
             'url_new_window' => false,
+            'logo' => false,
+            'profile_image' => false,
             'caching' => '0',
             'consumer_key' => '',
             'consumer_secret' => '',
@@ -188,25 +202,25 @@ class pi_tweet_scroll extends WP_Widget {
         <!-- Widget Title: Text Input -->
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>" />
         </p>
 
         <!-- Username: Text Input -->
         <p>
             <label for="<?php echo $this->get_field_id('username'); ?>"><?php _e('Twitter Username:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('username'); ?>" name="<?php echo $this->get_field_name('username'); ?>" value="<?php echo $instance['username']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('username'); ?>" name="<?php echo $this->get_field_name('username'); ?>" value="<?php echo $instance['username']; ?>" />
         </p>
 
         <!-- Limit: Text Input -->
         <p>
             <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Number of tweets to load:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" value="<?php echo $instance['limit']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" value="<?php echo $instance['limit']; ?>" />
         </p>
 
         <!-- Visible Tweets: Text Input -->
         <p>
             <label for="<?php echo $this->get_field_id('visible_tweets'); ?>"><?php _e('Number of tweets to show:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('visible_tweets'); ?>" name="<?php echo $this->get_field_name('visible_tweets'); ?>" value="<?php echo $instance['visible_tweets']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('visible_tweets'); ?>" name="<?php echo $this->get_field_name('visible_tweets'); ?>" value="<?php echo $instance['visible_tweets']; ?>" />
         </p>
 
         <!-- Scroll Speed: Number Input -->
@@ -250,7 +264,19 @@ class pi_tweet_scroll extends WP_Widget {
             <label for="<?php echo $this->get_field_id('url_new_window'); ?>"><?php _e('Open URL in new window/tab:', 'pi_framework') ?></label><br />
             <input type="checkbox" id="<?php echo $this->get_field_id('url_new_window'); ?>" name="<?php echo $this->get_field_name('url_new_window'); ?>" <?php if ($instance['url_new_window'] == true) echo 'checked' ?>/><label for="<?php echo $this->get_field_id('url_new_window'); ?>"> <?php _e('New window', 'pi_framework') ?></label>
         </p>
-        
+
+        <!-- Logo: Checkbox Input -->
+        <p>
+            <label for="<?php echo $this->get_field_id('logo'); ?>"><?php _e('Show Twitter logo', 'pi_framework') ?></label><br />
+            <input type="checkbox" id="<?php echo $this->get_field_id('logo'); ?>" name="<?php echo $this->get_field_name('logo'); ?>" <?php if ($instance['logo'] == true) echo 'checked' ?>/><label for="<?php echo $this->get_field_id('logo'); ?>"> <?php _e('Show', 'pi_framework') ?></label>
+        </p>
+
+        <!-- Profile image: Checkbox Input -->
+        <p>
+            <label for="<?php echo $this->get_field_id('profile_image'); ?>"><?php _e('Show profile image', 'pi_framework') ?></label><br />
+            <input type="checkbox" id="<?php echo $this->get_field_id('profile_image'); ?>" name="<?php echo $this->get_field_name('profile_image'); ?>" <?php if ($instance['profile_image'] == true) echo 'checked' ?>/><label for="<?php echo $this->get_field_id('profile_image'); ?>"> <?php _e('Show', 'pi_framework') ?></label>
+        </p>
+
         <!-- Caching: Select -->
         <p>
             <label for="<?php echo $this->get_field_id('caching'); ?>" ><?php _e('Fetch new tweets periodically [caching]:', 'pi_framework') ?></label><br />
@@ -272,25 +298,25 @@ class pi_tweet_scroll extends WP_Widget {
         <!-- Consumer Key -->
         <p>
             <label for="<?php echo $this->get_field_id('consumer_key'); ?>"><?php _e('Consumer Key:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('consumer_key'); ?>" name="<?php echo $this->get_field_name('consumer_key'); ?>" value="<?php echo $instance['consumer_key']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('consumer_key'); ?>" name="<?php echo $this->get_field_name('consumer_key'); ?>" value="<?php echo $instance['consumer_key']; ?>" />
         </p>
 
         <!-- Consumer Secret -->
         <p>
             <label for="<?php echo $this->get_field_id('consumer_secret'); ?>"><?php _e('Consumer Secret:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('consumer_secret'); ?>" name="<?php echo $this->get_field_name('consumer_secret'); ?>" value="<?php echo $instance['consumer_secret']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('consumer_secret'); ?>" name="<?php echo $this->get_field_name('consumer_secret'); ?>" value="<?php echo $instance['consumer_secret']; ?>" />
         </p>
 
         <!-- Access Token -->
         <p>
             <label for="<?php echo $this->get_field_id('access_token'); ?>"><?php _e('Access Token:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('access_token'); ?>" name="<?php echo $this->get_field_name('access_token'); ?>" value="<?php echo $instance['access_token']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('access_token'); ?>" name="<?php echo $this->get_field_name('access_token'); ?>" value="<?php echo $instance['access_token']; ?>" />
         </p>
 
         <!-- Access Token Secret -->
         <p>
             <label for="<?php echo $this->get_field_id('access_token_secret'); ?>"><?php _e('Access Token Secret:', 'pi_framework') ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('access_token_secret'); ?>" name="<?php echo $this->get_field_name('access_token_secret'); ?>" value="<?php echo $instance['access_token_secret']; ?>" />
+            <input type="text" class="widefat" id="<?php echo $this->get_field_id('access_token_secret'); ?>" name="<?php echo $this->get_field_name('access_token_secret'); ?>" value="<?php echo $instance['access_token_secret']; ?>" />
         </p>
 
         <?php
@@ -298,9 +324,107 @@ class pi_tweet_scroll extends WP_Widget {
 
 }
 
-// register ajax call function
-add_action('wp_ajax_nopriv_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
-add_action('wp_ajax_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
+/*
+ * Sets transient to enable caching.
+ * 
+ * @param $key
+ * @param $data
+ * @param $expiration
+ * 
+ */
+
+function ts_set_twitter_transient($key, $data, $expiration) {
+    // Time when transient expires  
+    $expire = time() + $expiration;
+    set_transient($key, array($expire, $data));
+}
+
+/*
+ * Makes connection object.
+ * 
+ * @param $cons_key
+ * @param $cons_secret
+ * @param $oauth_token
+ * @param $oauth_token_secret
+ * 
+ * return object
+ * 
+ */
+
+function getConnectionWithAccessToken($cons_key, $cons_secret, $oauth_token, $oauth_token_secret) {
+    $connection = new TwitterOAuth($cons_key, $cons_secret, $oauth_token, $oauth_token_secret);
+    return $connection;
+}
+
+/*
+ * Makes call to twitter API.
+ * 
+ * @param $twitteruser
+ * @param $notweets
+ * 
+ * return array/object
+ * 
+ */
+
+function ts_get_user_data($widget_options) {
+
+    // twitter keys
+    $consumerkey = $widget_options['consumer_key'];
+    $consumersecret = $widget_options['consumer_secret'];
+    $accesstoken = $widget_options['access_token'];
+    $accesstokensecret = $widget_options['access_token_secret'];
+    $notweets = $widget_options['limit'];
+
+    $twitteruser = $widget_options['username'];
+
+    // if username isn't array check if user separated usernames with comma
+    if (!is_array($twitteruser))
+        $twitteruser = explode(',', trim($twitteruser));
+
+    // create connection
+    $connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
+ 
+    // check if there are more then one username
+    if (count($twitteruser) > 1) {
+        $all_tweets = array();
+
+        $remainder = $notweets % count($twitteruser);
+        $tweets_per_user = floor($notweets / count($twitteruser));
+        
+        // split tweets per user so it doesn't exceed limit
+        foreach ($twitteruser as $user) {
+            if ($remainder > 0) {
+                $notweets = $tweets_per_user + $remainder;
+            } else {
+                $notweets = $tweets_per_user;
+            }
+
+            // get tweets
+            $tweets[] = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $user . "&count=" . $notweets);
+        }
+        
+        // merge into one array
+        $all_tweets = $tweets[0];
+        for ($i = 1; $i < count($tweets); $i++) {
+            $all_tweets = array_merge($all_tweets, $tweets[$i]);
+        }
+    } else {
+        $all_tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $twitteruser[0] . "&count=" . $notweets);
+    }
+
+    return $all_tweets;
+}
+
+/*
+ * AJAX call that fetches tweets from Twitter
+ * 
+ * @param instance_id
+ * @param username
+ * @param limit
+ * 
+ * return JSON
+ * 
+ */
 
 if (!function_exists('pi_tweetscroll_ajax')) {
 
@@ -313,28 +437,9 @@ if (!function_exists('pi_tweetscroll_ajax')) {
         $instances_options = get_option('widget_pi_tweet_scroll');
         $widget_options = $instances_options[$current_instance_id];
 
-        $twitteruser = $_GET['username'];
-        $notweets = $_GET['limit'];
+        // filter widget options
+        $widget_options = apply_filters('tweetscroll_widget_options', $widget_options);
         $caching = $widget_options['caching'];
-        $consumerkey = $widget_options['consumer_key'];
-        $consumersecret = $widget_options['consumer_secret'];
-        $accesstoken = $widget_options['access_token'];
-        $accesstokensecret = $widget_options['access_token_secret'];
-
-        $request_url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $twitteruser . "&count=" . $notweets;
-
-        function getConnectionWithAccessToken($cons_key, $cons_secret, $oauth_token, $oauth_token_secret) {
-            $connection = new TwitterOAuth($cons_key, $cons_secret, $oauth_token, $oauth_token_secret);
-            return $connection;
-        }
-
-        $connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
-
-        function set_twitter_transient($key, $data, $expiration) {
-            // Time when transient expires  
-            $expire = time() + $expiration;
-            set_transient($key, array($expire, $data));
-        }
 
         // Generate key  
         $key = 'tsw_' . $current_instance_id;
@@ -344,7 +449,8 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
         $transient = get_transient($key);
         if (false === $transient) {
-            $data = $connection->get($request_url);
+
+            $data = ts_get_user_data($widget_options);
 
             //if returned data is null, init error object
             if (empty($data) || isset($data->errors))
@@ -352,7 +458,8 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
             if (!is_wp_error($data)) {
                 // Update transient  
-                set_twitter_transient($key, $data, $expiration);
+                ts_set_twitter_transient($key, $data, $expiration);
+                header('content-type: application/json');
                 echo json_encode($data);
             } else {
                 _e('Failed to retrieve tweets.');
@@ -361,7 +468,7 @@ if (!function_exists('pi_tweetscroll_ajax')) {
             // Soft expiration. $transient = array( expiration time, data)  
             if ($transient[0] !== 0 && $transient[0] <= time()) {
                 // Expiration time passed, attempt to get new data 
-                $new_data = $connection->get($request_url);
+                $new_data = ts_get_user_data($widget_options);
 
                 // if returned data is null, init error object
                 if (empty($new_data) || isset($new_data->errors))
@@ -369,14 +476,19 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
                 if (!is_wp_error($new_data)) {
                     // If successful return update transient and new data  
-                    set_twitter_transient($key, $new_data, $expiration);
+                    ts_set_twitter_transient($key, $new_data, $expiration);
                     $transient[1] = $new_data;
                 }
             }
+            header('content-type: application/json');
             echo json_encode($transient[1]);
         }
         exit;
     }
 
 }
+
+// register ajax call function
+add_action('wp_ajax_nopriv_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
+add_action('wp_ajax_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
 ?>
