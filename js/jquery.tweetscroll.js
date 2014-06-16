@@ -65,6 +65,7 @@
 
             //do a JSON request to twitter API
             $.getJSON(requestURL, tweetscrollOptions, function(data) {
+                window.console.log(data);
                 $allTweets = createHtml(data, tweetscrollOptions);
                 $($allTweets).appendTo(act);
                 setInitialListHeight($allTweets);
@@ -220,13 +221,30 @@
 
         });
 
+
         function createHtml(data, tweetscrollOptions) {
+
+            if (!$.isArray(data))
+                return "Error!";
+
+            window.console.log(data);
             var $tweetList;
             var tweetMonth = '';
             var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "Septemper", "October", "November", "December"];
 
             $.each(data, function(i, item) {
+                function makeProfileNameLink(match, contents) {
+                    window.console.log('match');
+                    var cleanString = '<a href="http://twitter.com/' + contents.replace(/[^\w\s]/gi, '') + '">@' + contents + ' </a>';
+                    window.console.log(cleanString);
+                    return cleanString;
+                }
+                
+                function modifyTextAppearance(){
+                    return item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, makeProfileNameLink);
+                }
+
                 var profileImage = item.user.profile_image_url;
                 //check for the first loop
                 if (i == 0) {
@@ -239,17 +257,17 @@
                 if (tweetscrollOptions.replies === false) {
                     if (item.in_reply_to_status_id === null) {
                         if (tweetscrollOptions.profile_image) {
-                            $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, '<a href="http://twitter.com/$1">@$1 </a>$2') + '</p></li>');
+                            $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
 
                         } else {
-                            $tweetList.append('<li class="tweet_content_' + i + '"><p class="tweet_link_' + i + '">' + item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, '<a href="http://twitter.com/$1">@$1 </a>$2') + '</p></li>');
+                            $tweetList.append('<li class="tweet_content_' + i + '"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
                         }
                     }
                 } else {
                     if (tweetscrollOptions.profile_image) {
-                        $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, '<a href="http://twitter.com/$1">@$1 </a>$2') + '</p></li>');
+                        $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
                     } else {
-                        $tweetList.append('<li class="tweet_content_' + i + '"><p class="tweet_link_' + i + '">' + item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, '<a href="http://twitter.com/$1">@$1 </a>$2') + '</p></li>');
+                        $tweetList.append('<li class="tweet_content_' + i + '"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
                     }
                 }
                 //display the time of tweet if required
@@ -288,5 +306,7 @@
 
             return $tweetList;
         }
+
+
     }
 })(jQuery);

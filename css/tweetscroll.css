@@ -29,3 +29,7 @@
     padding-left: 60px;
     min-height: 60px;
 }
+
+span.hash{
+    font-style: italic;
+}

@@ -77,6 +77,10 @@ Read Installation section for details.
 
 == Changelog ==
 
+= 1.3.1 = 
+* Fixed bug with ReTweets that has colon in url.
+* Hashtags styled.
+
 = 1.3 = 
 * Added option for profile icon and twitter icon.
 * Fixed bug with dates not showing up.
