@@ -2,7 +2,7 @@
  * TweetScroll jQuery Plugin
  * Author: Pixel Industry
  * Author URL : http://pixel-industry.com
- * Version: 1.2.6
+ * Version: 1.2.7
  * 
  * jQuery plugin to load latest Twitter tweets.
  * 
@@ -45,6 +45,10 @@
         if (!tweetscrollOptions['instance_id'])
             tweetscrollOptions['instance_id'] = "";
         tweetscrollOptions['action'] = 'pi_tweetscroll_ajax';
+        
+        // date_format will be ignored when script is used in WordPress plugin
+        if(tweetscrollOptions['instance_id'])
+            tweetscrollOptions['date_format'] = false;
 
         //loop through each instance
         return this.each(function(options) {
@@ -65,7 +69,6 @@
 
             //do a JSON request to twitter API
             $.getJSON(requestURL, tweetscrollOptions, function(data) {
-                window.console.log(data);
                 $allTweets = createHtml(data, tweetscrollOptions);
                 $($allTweets).appendTo(act);
                 setInitialListHeight($allTweets);
@@ -227,7 +230,6 @@
             if (!$.isArray(data))
                 return "Error!";
 
-            window.console.log(data);
             var $tweetList;
             var tweetMonth = '';
             var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -235,9 +237,7 @@
 
             $.each(data, function(i, item) {
                 function makeProfileNameLink(match, contents) {
-                    window.console.log('match');
                     var cleanString = '<a href="http://twitter.com/' + contents.replace(/[^\w\s]/gi, '') + '">@' + contents + ' </a>';
-                    window.console.log(cleanString);
                     return cleanString;
                 }
                 
@@ -280,9 +280,11 @@
                             tweetMonth = '0' + tweetMonth;
                         }
                         $tweetList.find('.tweet_link_' + i).append('<small> ' + item.created_at.substr(8, 2) + '/' + tweetMonth + '/' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small>');
-                    } else {
+                    } else if(tweetscrollOptions.date_format == 'style2'){
                         tweetMonth = allMonths[monthIndex];
                         $tweetList.find('.tweet_link_' + i).append('<small> ' + tweetMonth + ' ' + item.created_at.substr(8, 2) + ', ' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small>');
+                    }else{
+                        $tweetList.find('.tweet_link_' + i).append('<small> ' + item.created_at + '</small>');
                     }
 
                 }

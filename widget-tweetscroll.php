@@ -4,7 +4,7 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.3.1
+  Version: 1.3.3
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
@@ -80,7 +80,6 @@ class pi_tweet_scroll extends WP_Widget {
         $speed = $instance['scroll_speed'];
         $delay = $instance['delay'];
         $time = $instance['time'];
-        $date_format = $instance['date_format'];
         $animation = $instance['animation'];
         $url_new_window = $instance['url_new_window'];
         $logo = $instance['logo'];
@@ -101,6 +100,7 @@ class pi_tweet_scroll extends WP_Widget {
         $twitter_id = rand(1, 999);
 
         $instance_args = !empty($widget_id) ? $widget_id : $id;
+
         // current instance id
         $current_instance_id = substr($instance_args, strrpos($instance_args, '-') + 1);
 
@@ -123,7 +123,6 @@ class pi_tweet_scroll extends WP_Widget {
                     limit: <?php echo $limit ?>,
                     speed: <?php echo $speed ?>,
                     delay: <?php echo $delay ?>,
-                    date_format: '<?php echo $date_format ?>',
                     animation: '<?php echo $animation ?>',
                     url_new_window: <?php echo $url_new_window_var ?>,
                     visible_tweets: <?php echo $visible_tweets ?>,
@@ -153,7 +152,6 @@ class pi_tweet_scroll extends WP_Widget {
         $instance['scroll_speed'] = absint($new_instance['scroll_speed']);
         $instance['delay'] = absint($new_instance['delay']);
         $instance['time'] = strip_tags($new_instance['time']);
-        $instance['date_format'] = strip_tags($new_instance['date_format']);
         $instance['animation'] = strip_tags($new_instance['animation']);
         $instance['url_new_window'] = strip_tags($new_instance['url_new_window']);
         $instance['logo'] = strip_tags($new_instance['logo']);
@@ -184,7 +182,6 @@ class pi_tweet_scroll extends WP_Widget {
             'scroll_speed' => '600',
             'delay' => '3000',
             'time' => true,
-            'date_format' => 'style2',
             'animation' => 'slide_up',
             'url_new_window' => false,
             'logo' => false,
@@ -239,13 +236,6 @@ class pi_tweet_scroll extends WP_Widget {
         <p>
             <label for="<?php echo $this->get_field_id('time'); ?>"><?php _e('Show or hide timestamp:', 'pi_framework') ?></label><br />
             <input type="checkbox" id="<?php echo $this->get_field_id('time'); ?>" name="<?php echo $this->get_field_name('time'); ?>" <?php if ($instance['time'] == true) echo 'checked' ?>/><label for="<?php echo $this->get_field_id('time'); ?>"> <?php _e('Show', 'pi_framework') ?></label>
-        </p>
-
-        <!-- Date Format: Radio Input -->
-        <p>
-            <label for="<?php echo $this->get_field_id('date_format'); ?>"><?php _e('Date Format:', 'pi_framework') ?></label><br />
-            <input type="radio" id="<?php echo $this->get_field_id('date_format'); ?>-1" name="<?php echo $this->get_field_name('date_format'); ?>" value="style1" <?php if ($instance['date_format'] == 'style1') echo 'checked=checked' ?>/> <label for="<?php echo $this->get_field_id('date_format'); ?>-1"> <?php _e('DD/MM/YYYY', 'pi_framework') ?></label><br />
-            <input type="radio" id="<?php echo $this->get_field_id('date_format'); ?>-2" name="<?php echo $this->get_field_name('date_format'); ?>" value="style2" <?php if ($instance['date_format'] == 'style2') echo 'checked=checked' ?>/> <label for="<?php echo $this->get_field_id('date_format'); ?>-2"> <?php _e('MM DD YYYY', 'pi_framework') ?></label>
         </p>
 
         <!-- Animation: Select -->
@@ -383,14 +373,14 @@ function ts_get_user_data($widget_options) {
 
     // create connection
     $connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
- 
+
     // check if there are more then one username
     if (count($twitteruser) > 1) {
         $all_tweets = array();
 
         $remainder = $notweets % count($twitteruser);
         $tweets_per_user = floor($notweets / count($twitteruser));
-        
+
         // split tweets per user so it doesn't exceed limit
         foreach ($twitteruser as $user) {
             if ($remainder > 0) {
@@ -402,7 +392,7 @@ function ts_get_user_data($widget_options) {
             // get tweets
             $tweets[] = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $user . "&count=" . $notweets);
         }
-        
+
         // merge into one array
         $all_tweets = $tweets[0];
         for ($i = 1; $i < count($tweets); $i++) {
@@ -435,10 +425,11 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
         $current_instance_id = $_GET['instance_id'];
         $instances_options = get_option('widget_pi_tweet_scroll');
-        $widget_options = $instances_options[$current_instance_id];
+        $widget_options = isset($instances_options[$current_instance_id]) ? $instances_options[$current_instance_id] : '';
 
         // filter widget options
-        $widget_options = apply_filters('tweetscroll_widget_options', $widget_options);
+        $widget_options = apply_filters('tweetscroll_widget_options', $widget_options, $current_instance_id);
+
         $caching = $widget_options['caching'];
 
         // Generate key  
@@ -459,6 +450,7 @@ if (!function_exists('pi_tweetscroll_ajax')) {
             if (!is_wp_error($data)) {
                 // Update transient  
                 ts_set_twitter_transient($key, $data, $expiration);
+                $data = ts_convert_date_time_format($data);
                 header('content-type: application/json');
                 echo json_encode($data);
             } else {
@@ -480,6 +472,7 @@ if (!function_exists('pi_tweetscroll_ajax')) {
                     $transient[1] = $new_data;
                 }
             }
+            $transient[1] = ts_convert_date_time_format($transient[1]);
             header('content-type: application/json');
             echo json_encode($transient[1]);
         }
@@ -488,7 +481,32 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
 }
 
-// register ajax call function
 add_action('wp_ajax_nopriv_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
 add_action('wp_ajax_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
+
+function ts_convert_date_time_format($data) {
+    $wp_date_format = get_option('date_format');
+    $wp_time_format = get_option('time_format');
+    $wp_time_zone = get_option('timezone_string');
+    $date_time_format = $wp_date_format . " " . $wp_time_format;
+
+    $tweets_formated = [];
+
+    foreach ($data as $index => $tweet) {
+        // get date object
+        $date = new DateTime($tweet->created_at, new DateTimeZone('UTC'));
+        $date->format('D M d H:i:s O Y') . "\n";
+        
+        // format date to format from WordPress settings
+        $date->setTimezone(new DateTimeZone($wp_time_zone));
+        $new_date = $date->format($date_time_format) . "\n";
+
+        // store new date
+        $tweet->created_at = $new_date;
+        $tweets_formated[] = $tweet;
+
+    }
+    
+    return $tweets_formated;
+}
 ?>

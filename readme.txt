@@ -78,6 +78,10 @@ Read Installation section for details.
 == Changelog ==
 
 = 1.3.1 = 
+* Date format option removed. Format should be set in WordPress General Settings.
+* Hashtags styled.
+
+= 1.3.1 = 
 * Fixed bug with ReTweets that has colon in url.
 * Hashtags styled.
 
