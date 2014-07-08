@@ -77,7 +77,7 @@ Read Installation section for details.
 
 == Changelog ==
 
-= 1.3.1 = 
+= 1.3.2 = 
 * Date format option removed. Format should be set in WordPress General Settings.
 * Hashtags styled.
 
