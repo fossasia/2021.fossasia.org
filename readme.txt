@@ -78,6 +78,9 @@ Read Installation section for details.
 == Changelog ==
 
 = 1.3.2 = 
+* Added default values for Date, Time and TimeZone.
+
+= 1.3.2 = 
 * Date format option removed. Format should be set in WordPress General Settings.
 
 = 1.3.1 = 

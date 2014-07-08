@@ -4,7 +4,7 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.3.2
+  Version: 1.3.3
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
@@ -485,18 +485,30 @@ add_action('wp_ajax_nopriv_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
 add_action('wp_ajax_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
 
 function ts_convert_date_time_format($data) {
+    // date format
     $wp_date_format = get_option('date_format');
+    if (empty($wp_date_format))
+        $wp_date_format = "F j, Y";
+
+    // time format
     $wp_time_format = get_option('time_format');
+    if (empty($wp_time_format))
+        $wp_time_format = "g:i a";
+
     $wp_time_zone = get_option('timezone_string');
+    if(empty($wp_time_zone)){
+        $wp_time_zone = "UTC";
+    }
+
     $date_time_format = $wp_date_format . " " . $wp_time_format;
 
-    $tweets_formated = [];
+    $tweets_formated = array();
 
     foreach ($data as $index => $tweet) {
         // get date object
         $date = new DateTime($tweet->created_at, new DateTimeZone('UTC'));
         $date->format('D M d H:i:s O Y') . "\n";
-        
+
         // format date to format from WordPress settings
         $date->setTimezone(new DateTimeZone($wp_time_zone));
         $new_date = $date->format($date_time_format) . "\n";
@@ -504,9 +516,8 @@ function ts_convert_date_time_format($data) {
         // store new date
         $tweet->created_at = $new_date;
         $tweets_formated[] = $tweet;
-
     }
-    
+
     return $tweets_formated;
 }
 ?>
