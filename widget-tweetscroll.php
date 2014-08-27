@@ -4,7 +4,7 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.3.3
+  Version: 1.3.4
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
@@ -70,6 +70,8 @@ class pi_tweet_scroll extends WP_Widget {
       /*----------------------------------------------------------------------------------- */
 
     function widget($args, $instance) {
+        global $post;
+        
         extract($args);
 
         // Our variables from the widget settings
@@ -106,7 +108,7 @@ class pi_tweet_scroll extends WP_Widget {
 
         // Display Latest Tweets
         ?>
-        <div id="tweets-list-id-<?php echo $twitter_id ?>" class="tweets-list-container aside" data-instance-id="<?php echo $current_instance_id ?>"></div>
+        <div id="tweets-list-id-<?php echo $twitter_id ?>" class="tweets-list-container aside" data-instance-id="<?php echo $current_instance_id ?>" data-post-id="<?php echo $post->ID ?>"></div>
 
         <?php
         $timevar = $time ? 'true' : 'false';
@@ -424,11 +426,12 @@ if (!function_exists('pi_tweetscroll_ajax')) {
         require_once( TS_PLUGIN_DIR . "/twitter/twitteroauth.php" ); //Path to twitteroauth library
 
         $current_instance_id = $_GET['instance_id'];
+        $current_post_id = $_GET['post_id'];
         $instances_options = get_option('widget_pi_tweet_scroll');
         $widget_options = isset($instances_options[$current_instance_id]) ? $instances_options[$current_instance_id] : '';
 
         // filter widget options
-        $widget_options = apply_filters('tweetscroll_widget_options', $widget_options, $current_instance_id);
+        $widget_options = apply_filters('tweetscroll_widget_options', $widget_options, $current_instance_id, $current_post_id);
 
         $caching = $widget_options['caching'];
 

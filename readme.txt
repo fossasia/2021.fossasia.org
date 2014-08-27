@@ -3,7 +3,7 @@ Contributors: pixel-industry,vmrkela
 Donate link: 
 Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
 Requires at least: 3.3
-Tested up to: 3.9.1
+Tested up to: 3.9.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -77,7 +77,10 @@ Read Installation section for details.
 
 == Changelog ==
 
-= 1.3.2 = 
+= 1.3.4 = 
+* Compatibility with Content Manager - page builder plugin.
+
+= 1.3.3 = 
 * Added default values for Date, Time and TimeZone.
 
 = 1.3.2 = 

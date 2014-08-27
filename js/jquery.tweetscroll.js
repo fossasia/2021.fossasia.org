@@ -40,14 +40,20 @@
             tweetscrollOptions.delay = 3000;
         }
 
-        // Wordpress widget change
+        // -- Wordpress widget change start --
         tweetscrollOptions['instance_id'] = $(this).attr('data-instance-id');
+
         if (!tweetscrollOptions['instance_id'])
             tweetscrollOptions['instance_id'] = "";
+
         tweetscrollOptions['action'] = 'pi_tweetscroll_ajax';
-        
+
+        tweetscrollOptions['post_id'] = $(this).attr('data-post-id');
+
+        // -- WordPress change end --
+
         // date_format will be ignored when script is used in WordPress plugin
-        if(tweetscrollOptions['instance_id'])
+        if (tweetscrollOptions['instance_id'])
             tweetscrollOptions['date_format'] = false;
 
         //loop through each instance
@@ -240,8 +246,8 @@
                     var cleanString = '<a href="http://twitter.com/' + contents.replace(/[^\w\s]/gi, '') + '">@' + contents + ' </a>';
                     return cleanString;
                 }
-                
-                function modifyTextAppearance(){
+
+                function modifyTextAppearance() {
                     return item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, makeProfileNameLink);
                 }
 
@@ -280,10 +286,10 @@
                             tweetMonth = '0' + tweetMonth;
                         }
                         $tweetList.find('.tweet_link_' + i).append('<small> ' + item.created_at.substr(8, 2) + '/' + tweetMonth + '/' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small>');
-                    } else if(tweetscrollOptions.date_format == 'style2'){
+                    } else if (tweetscrollOptions.date_format == 'style2') {
                         tweetMonth = allMonths[monthIndex];
                         $tweetList.find('.tweet_link_' + i).append('<small> ' + tweetMonth + ' ' + item.created_at.substr(8, 2) + ', ' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small>');
-                    }else{
+                    } else {
                         $tweetList.find('.tweet_link_' + i).append('<small> ' + item.created_at + '</small>');
                     }
 
