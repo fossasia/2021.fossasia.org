@@ -2,15 +2,15 @@
  * TweetScroll jQuery Plugin
  * Author: Pixel Industry
  * Author URL : http://pixel-industry.com
- * Version: 1.2.7
+ * Version: 1.2.8
  * 
  * jQuery plugin to load latest Twitter tweets.
  * 
  */
 
-(function($) {
+(function ($) {
     //define the tweetable plugin
-    $.fn.tweetscroll = function(options) {
+    $.fn.tweetscroll = function (options) {
         //specify the plugins defauls
         var defaults = {
             limit: 5, //number of tweets to fetch
@@ -57,7 +57,7 @@
             tweetscrollOptions['date_format'] = false;
 
         //loop through each instance
-        return this.each(function(options) {
+        return this.each(function (options) {
             //assign our initial vars
             var act = $(this);
             var $allTweets;
@@ -74,11 +74,11 @@
             }
 
             //do a JSON request to twitter API
-            $.getJSON(requestURL, tweetscrollOptions, function(data) {
+            $.getJSON(requestURL, tweetscrollOptions, function (data) {
                 $allTweets = createHtml(data, tweetscrollOptions);
                 $($allTweets).appendTo(act);
                 setInitialListHeight($allTweets);
-                setTimeout(function() {
+                setTimeout(function () {
                     animateTweets($allTweets);
                 }, tweetscrollOptions.delay);
 
@@ -109,7 +109,7 @@
                         $allTweets.animate(
                                 {
                                     'bottom': -lastItemHeight
-                                }, scrollSpeed, 'linear', function() {
+                                }, scrollSpeed, 'linear', function () {
                             /* put the last item before the first item */
                             $allTweets.find('li:first').before($allTweets.find('li:last'));
 
@@ -118,7 +118,7 @@
                                 'bottom': 0
                             });
 
-                            window.setTimeout(function() {
+                            window.setTimeout(function () {
                                 animateTweets($allTweets);
                             }, tweetscrollOptions.delay);
                         });
@@ -139,7 +139,7 @@
                         $allTweets.animate(
                                 {
                                     'top': -itemHeight
-                                }, scrollSpeed, 'linear', function() {
+                                }, scrollSpeed, 'linear', function () {
                             /* put the last item before the first item */
                             $allTweets.find('li:last').after($allTweets.find('li:first'));
 
@@ -148,7 +148,7 @@
                                 'top': 0
                             });
 
-                            window.setTimeout(function() {
+                            window.setTimeout(function () {
                                 animateTweets($allTweets);
                             }, tweetscrollOptions.delay);
                         });
@@ -164,7 +164,7 @@
                         $allTweets.animate(
                                 {
                                     'opacity': 0
-                                }, scrollSpeed, 'linear', function() {
+                                }, scrollSpeed, 'linear', function () {
                             /* put the last item before the first item */
                             var selectorString = $allTweets.find('li:lt(' + tweetscrollOptions.visible_tweets + ')');
                             $allTweets.find('li:last').after($(selectorString));
@@ -181,7 +181,7 @@
                                 opacity: 1
                             });
 
-                            window.setTimeout(function() {
+                            window.setTimeout(function () {
                                 animateTweets($allTweets);
                             }, tweetscrollOptions.delay);
 
@@ -241,14 +241,25 @@
             var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "Septemper", "October", "November", "December"];
 
-            $.each(data, function(i, item) {
+            $.each(data, function (i, item) {
                 function makeProfileNameLink(match, contents) {
                     var cleanString = '<a href="http://twitter.com/' + contents.replace(/[^\w\s]/gi, '') + '">@' + contents + ' </a>';
                     return cleanString;
                 }
 
                 function modifyTextAppearance() {
-                    return item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, makeProfileNameLink);
+                    
+                    // if this is retweet get full retweet text
+                    if (item.retweeted_status) {
+                        var text = item.retweeted_status.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, makeProfileNameLink);
+                        var user = item.retweeted_status.user.screen_name;
+                        text = "RT @<a href='https://twitter.com/" + user + "'>" + user + "</a>: " + text;
+                        return text;
+
+                    } else {
+                        return item.text.replace(/#(.*?)(\s|$)/g, '<span class="hash">#$1 </span>').replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$&">$&</a> ').replace(/@(.*?)(\s|\(|\)|$)/g, makeProfileNameLink);
+
+                    }
                 }
 
                 var profileImage = item.user.profile_image_url;
@@ -298,14 +309,14 @@
             });
 
             if (tweetscrollOptions.animation == 'slide_down') {
-                $tweetList.find('li').each(function() {
+                $tweetList.find('li').each(function () {
                     $(this).prependTo($(this).parent());
                 });
             }
 
             //check how to open link, same page or in new window                
             if (tweetscrollOptions.url_new_window == true) {
-                $tweetList.find('a').each(function() {
+                $tweetList.find('a').each(function () {
                     $(this).attr({
                         target: '_BLANK'
                     });

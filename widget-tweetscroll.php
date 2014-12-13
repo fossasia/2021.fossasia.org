@@ -4,7 +4,7 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.3.4
+  Version: 1.3.5
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
@@ -442,6 +442,7 @@ if (!function_exists('pi_tweetscroll_ajax')) {
         $expiration = 60 * $caching;
 
         $transient = get_transient($key);
+
         if (false === $transient) {
 
             $data = ts_get_user_data($widget_options);
