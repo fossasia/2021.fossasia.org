@@ -4,11 +4,13 @@
   Plugin Name: TweetScroll Widget
   Plugin URI: http://www.pixel-industry.com
   Description: A widget that displays lastest tweets from your Twitter account.
-  Version: 1.3.5
+  Version: 1.3.6
   Author: Pixel Industry
   Author URI: http://www.pixel-industry.com
 
   ----------------------------------------------------------------------------------- */
+
+define('TWEETSCROLL_VERSION', '1.3.6');
 
 // declare constants
 if (!defined('TS_PLUGIN_DIR'))
@@ -27,7 +29,7 @@ add_action('widgets_init', 'pi_tweet_scroll');
 // Enqueue scripts
 function pi_ts_enqueue_styles() {
     /* jQuery tweetscroll plugin */
-    wp_register_style('tweetscroll', TS_PLUGIN_URL . '/css/tweetscroll.css', array(), '1.0', 'screen');
+    wp_register_style('tweetscroll', TS_PLUGIN_URL . '/css/tweetscroll.css', array(), TWEETSCROLL_VERSION, 'screen');
     // load javascript scripts
     wp_enqueue_style('tweetscroll');
 }
@@ -71,7 +73,7 @@ class pi_tweet_scroll extends WP_Widget {
 
     function widget($args, $instance) {
         global $post;
-        
+
         extract($args);
 
         // Our variables from the widget settings
@@ -117,7 +119,7 @@ class pi_tweet_scroll extends WP_Widget {
         $profile_image_var = $profile_image ? 'true' : 'false';
         ?>
         <script>
-            jQuery(function($) {
+            jQuery(function ($) {
                 /* ================ TWEETS SCROLL ================ */
                 jQuery('#tweets-list-id-<?php echo $twitter_id ?>').tweetscroll({
                     username: '<?php echo $username ?>',
@@ -328,7 +330,11 @@ class pi_tweet_scroll extends WP_Widget {
 function ts_set_twitter_transient($key, $data, $expiration) {
     // Time when transient expires  
     $expire = time() + $expiration;
-    set_transient($key, array($expire, $data));
+    $transient = array($expire, $data);
+    $transient = serialize($transient);
+    $transient = base64_encode($transient);
+
+    set_transient($key, $transient);
 }
 
 /*
@@ -425,6 +431,7 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
         require_once( TS_PLUGIN_DIR . "/twitter/twitteroauth.php" ); //Path to twitteroauth library
 
+
         $current_instance_id = $_GET['instance_id'];
         $current_post_id = $_GET['post_id'];
         $instances_options = get_option('widget_pi_tweet_scroll');
@@ -442,6 +449,14 @@ if (!function_exists('pi_tweetscroll_ajax')) {
         $expiration = 60 * $caching;
 
         $transient = get_transient($key);
+
+        if (base64_encode(base64_decode($transient, true)) === $transient) {
+            $transient = base64_decode($transient);
+            $transient = unserialize($transient);
+        } else {
+            delete_transient($key);
+            $transient = false;
+        }
 
         if (false === $transient) {
 
@@ -462,7 +477,8 @@ if (!function_exists('pi_tweetscroll_ajax')) {
             }
         } else {
             // Soft expiration. $transient = array( expiration time, data)  
-            if ($transient[0] !== 0 && $transient[0] <= time()) {
+            if ($transient[0] !== 0 && (int) $transient[0] <= time()) {
+
                 // Expiration time passed, attempt to get new data 
                 $new_data = ts_get_user_data($widget_options);
 
@@ -489,6 +505,7 @@ add_action('wp_ajax_nopriv_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
 add_action('wp_ajax_pi_tweetscroll_ajax', 'pi_tweetscroll_ajax');
 
 function ts_convert_date_time_format($data) {
+
     // date format
     $wp_date_format = get_option('date_format');
     if (empty($wp_date_format))
@@ -500,7 +517,7 @@ function ts_convert_date_time_format($data) {
         $wp_time_format = "g:i a";
 
     $wp_time_zone = get_option('timezone_string');
-    if(empty($wp_time_zone)){
+    if (empty($wp_time_zone)) {
         $wp_time_zone = "UTC";
     }
 
