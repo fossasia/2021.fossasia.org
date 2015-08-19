@@ -55,7 +55,7 @@ class pi_tweet_scroll extends WP_Widget {
     /* 	Widget Setup
       /*----------------------------------------------------------------------------------- */
 
-    function pi_tweet_scroll() {
+    function __construct() {
 
         // Widget settings
         $widget_options = array(
@@ -64,7 +64,7 @@ class pi_tweet_scroll extends WP_Widget {
         );
 
         // Create the widget
-        $this->WP_Widget('pi_tweet_scroll', __('TweetScroll', 'pi_framework'), $widget_options);
+        parent::__construct('pi_tweet_scroll', __('TweetScroll', 'pi_framework'), $widget_options);
     }
 
     /* ----------------------------------------------------------------------------------- */
