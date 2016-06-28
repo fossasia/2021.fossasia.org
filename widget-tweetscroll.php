@@ -155,7 +155,6 @@ class pi_tweet_scroll extends WP_Widget {
 
     function update($new_instance, $old_instance) {
         $instance = $old_instance;
-
         // Strip tags to remove HTML (important for text inputs)
         $instance['title'] = strip_tags($new_instance['title']);
         $instance['username'] = strip_tags($new_instance['username']);
@@ -169,12 +168,11 @@ class pi_tweet_scroll extends WP_Widget {
         $instance['logo'] = strip_tags($new_instance['logo']);
         $instance['profile_image'] = strip_tags($new_instance['profile_image']);
         $instance['caching'] = strip_tags($new_instance['caching']);
-        $instance['loklak_api'] = strip_tags($new_instance['loklak_api']);
+        $instance['loklak_api'] = $new_instance['loklak_api'];
         $instance['consumer_key'] = strip_tags($new_instance['consumer_key']);
         $instance['consumer_secret'] = strip_tags($new_instance['consumer_secret']);
         $instance['access_token'] = strip_tags($new_instance['access_token']);
         $instance['access_token_secret'] = strip_tags($new_instance['access_token_secret']);
-
         // No need to strip tags
 
         return $instance;
@@ -302,7 +300,7 @@ class pi_tweet_scroll extends WP_Widget {
         <!-- loklak API -->
         <p>
             <label for="<?php echo $this->get_field_id('loklak_api'); ?>"><?php _e('Use Loklak API:', 'pi_framework') ?></label><br />
-            <input type="checkbox" class ="loklak_api" id="<?php echo $this->get_field_id('loklak_api'); ?>" name="<?php echo $this->get_field_name('loklak_api'); ?>" <?php checked( isset( $instance['loklakAPI']), true ); ?>/>
+            <input type="checkbox" class ="loklak_api" id="<?php echo $this->get_field_id('loklak_api'); ?>" name="<?php echo $this->get_field_name('loklak_api'); ?>" <?php checked( isset( $instance['loklak_api']), true ); ?>/>
             <label for="<?php echo $this->get_field_id('loklak_api'); ?>"> <?php _e('Use anonymous API of <a href="http://loklak.org/">loklak.org</a> and get plugin data through loklak (no registration and authentication required). <a href="http://loklak.org/">Find out more</a>', 'pi_framework') ?></label>
         </p>
 
