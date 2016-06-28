@@ -47,7 +47,15 @@ function pi_ts_enqueue_scripts() {
     wp_localize_script('tweetscroll', 'PiTweetScroll', array('ajaxrequests' => admin_url('admin-ajax.php')));
 }
 
+function pi_ts_admin_enqueue_scripts() {
+    /* Admin twitter auth disable script */
+    wp_register_script('twitterdisable', TS_PLUGIN_URL . '/js/twitterdisable.tweetscroll.js', array('jquery'));
+    // load javascript scripts
+    wp_enqueue_script('twitterdisable');
+}
+
 add_action('wp_enqueue_scripts', 'pi_ts_enqueue_scripts');
+add_action('admin_enqueue_scripts', 'pi_ts_admin_enqueue_scripts');
 
 // Widget class
 class pi_tweet_scroll extends WP_Widget {
@@ -294,7 +302,7 @@ class pi_tweet_scroll extends WP_Widget {
         <!-- loklak API -->
         <p>
             <label for="<?php echo $this->get_field_id('loklak_api'); ?>"><?php _e('Use Loklak API:', 'pi_framework') ?></label><br />
-            <input type="checkbox" class ="loklak_api" id="<?php echo $this->get_field_id('loklak_api'); ?>" name="<?php echo $this->get_field_name('loklak_api'); ?>" <?php if ($instance['loklak_api'] == true) echo 'checked' ?>/>
+            <input type="checkbox" class ="loklak_api" id="<?php echo $this->get_field_id('loklak_api'); ?>" name="<?php echo $this->get_field_name('loklak_api'); ?>" <?php checked( isset( $instance['loklakAPI']), true ); ?>/>
             <label for="<?php echo $this->get_field_id('loklak_api'); ?>"> <?php _e('Use anonymous API of <a href="http://loklak.org/">loklak.org</a> and get plugin data through loklak (no registration and authentication required). <a href="http://loklak.org/">Find out more</a>', 'pi_framework') ?></label>
         </p>
 
@@ -413,9 +421,7 @@ function ts_get_user_data($widget_options) {
             // get tweets
             if ($loklakapi) {
                 $tweets = $connection->search('', null, null, $user, $notweets);
-                $tweets = json_decode($tweets, true);
-                $tweets = json_decode($tweets['body'], true);
-                $tweets[] = $tweets['statuses'];  
+                $tweets[] = $tweets->body->statuses;  
             }  
             else
                 $tweets[] = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $user . "&count=" . $notweets);

@@ -230,7 +230,6 @@
 
         });
 
-
         function createHtml(data, tweetscrollOptions) {
 
             if (!$.isArray(data))
