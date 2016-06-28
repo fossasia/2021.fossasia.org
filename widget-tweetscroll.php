@@ -389,8 +389,11 @@ function ts_get_user_data($widget_options) {
     if (!is_array($twitteruser))
         $twitteruser = explode(',', trim($twitteruser));
 
-    // create connection
-    $connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
+    // create twitter connection if loklak disabled
+    if ($loklakapi)
+        $connection = new Loklak();     
+    else
+        $connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
 
     // check if there are more then one username
     if (count($twitteruser) > 1) {
@@ -408,7 +411,14 @@ function ts_get_user_data($widget_options) {
             }
 
             // get tweets
-            $tweets[] = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $user . "&count=" . $notweets);
+            if ($loklakapi) {
+                $tweets = $connection->search('', null, null, $user, $notweets);
+                $tweets = json_decode($tweets, true);
+                $tweets = json_decode($tweets['body'], true);
+                $tweets[] = $tweets['statuses'];  
+            }  
+            else
+                $tweets[] = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $user . "&count=" . $notweets);
         }
 
         // merge into one array
@@ -417,7 +427,14 @@ function ts_get_user_data($widget_options) {
             $all_tweets = array_merge($all_tweets, $tweets[$i]);
         }
     } else {
-        $all_tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $twitteruser[0] . "&count=" . $notweets);
+        if ($loklakapi) {
+            $tweets = $loklak->search('', null, null, $user, $notweets);
+            $tweets = json_decode($tweets, true);
+            $tweets = json_decode($tweets['body'], true);
+            $all_tweets = $tweets['statuses'];  
+        }  
+        else
+            $all_tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $twitteruser[0] . "&count=" . $notweets);
     }
 
     return $all_tweets;
