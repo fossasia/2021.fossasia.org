@@ -460,7 +460,11 @@ if (!function_exists('pi_tweetscroll_ajax')) {
     function pi_tweetscroll_ajax() {
         session_start();
 
-        require_once( TS_PLUGIN_DIR . "/twitter/twitteroauth.php" ); //Path to twitteroauth library
+
+        if (!class_exists('Loklak') && $loklak_api)
+            require_once( TS_PLUGIN_DIR . "/loklak_php_api/loklak.php" ); //Path to twitteroauth library
+        else if(!$loklak_api)
+            require_once( TS_PLUGIN_DIR . "/twitter/twitteroauth.php" ); //Path to twitteroauth library
 
 
         $current_instance_id = $_GET['instance_id'];
