@@ -161,6 +161,7 @@ class pi_tweet_scroll extends WP_Widget {
         $instance['logo'] = strip_tags($new_instance['logo']);
         $instance['profile_image'] = strip_tags($new_instance['profile_image']);
         $instance['caching'] = strip_tags($new_instance['caching']);
+        $instance['loklak_api'] = strip_tags($new_instance['loklak_api']);
         $instance['consumer_key'] = strip_tags($new_instance['consumer_key']);
         $instance['consumer_secret'] = strip_tags($new_instance['consumer_secret']);
         $instance['access_token'] = strip_tags($new_instance['access_token']);
@@ -191,6 +192,7 @@ class pi_tweet_scroll extends WP_Widget {
             'logo' => false,
             'profile_image' => false,
             'caching' => '0',
+            'loklak_api' => true,
             'consumer_key' => '',
             'consumer_secret' => '',
             'access_token' => '',
@@ -289,28 +291,35 @@ class pi_tweet_scroll extends WP_Widget {
             </select>
         </p>
 
+        <!-- loklak API -->
+        <p>
+            <label for="<?php echo $this->get_field_id('loklak_api'); ?>"><?php _e('Use Loklak API:', 'pi_framework') ?></label><br />
+            <input type="checkbox" class ="loklak_api" id="<?php echo $this->get_field_id('loklak_api'); ?>" name="<?php echo $this->get_field_name('loklak_api'); ?>" <?php if ($instance['loklak_api'] == true) echo 'checked' ?>/>
+            <label for="<?php echo $this->get_field_id('loklak_api'); ?>"> <?php _e('Use anonymous API of <a href="http://loklak.org/">loklak.org</a> and get plugin data through loklak (no registration and authentication required). <a href="http://loklak.org/">Find out more</a>', 'pi_framework') ?></label>
+        </p>
+
         <!-- Consumer Key -->
         <p>
             <label for="<?php echo $this->get_field_id('consumer_key'); ?>"><?php _e('Consumer Key:', 'pi_framework') ?></label>
-            <input type="text" class="widefat" id="<?php echo $this->get_field_id('consumer_key'); ?>" name="<?php echo $this->get_field_name('consumer_key'); ?>" value="<?php echo $instance['consumer_key']; ?>" />
+            <input type="text" class="widefat consumer_key" id="<?php echo $this->get_field_id('consumer_key'); ?>" name="<?php echo $this->get_field_name('consumer_key'); ?>" value="<?php echo $instance['consumer_key']; ?>" />
         </p>
 
         <!-- Consumer Secret -->
         <p>
             <label for="<?php echo $this->get_field_id('consumer_secret'); ?>"><?php _e('Consumer Secret:', 'pi_framework') ?></label>
-            <input type="text" class="widefat" id="<?php echo $this->get_field_id('consumer_secret'); ?>" name="<?php echo $this->get_field_name('consumer_secret'); ?>" value="<?php echo $instance['consumer_secret']; ?>" />
+            <input type="text" class="widefat consumer_secret" id="<?php echo $this->get_field_id('consumer_secret'); ?>" name="<?php echo $this->get_field_name('consumer_secret'); ?>" value="<?php echo $instance['consumer_secret']; ?>" />
         </p>
 
         <!-- Access Token -->
         <p>
             <label for="<?php echo $this->get_field_id('access_token'); ?>"><?php _e('Access Token:', 'pi_framework') ?></label>
-            <input type="text" class="widefat" id="<?php echo $this->get_field_id('access_token'); ?>" name="<?php echo $this->get_field_name('access_token'); ?>" value="<?php echo $instance['access_token']; ?>" />
+            <input type="text" class="widefat access_token" id="<?php echo $this->get_field_id('access_token'); ?>" name="<?php echo $this->get_field_name('access_token'); ?>" value="<?php echo $instance['access_token']; ?>" />
         </p>
 
         <!-- Access Token Secret -->
         <p>
             <label for="<?php echo $this->get_field_id('access_token_secret'); ?>"><?php _e('Access Token Secret:', 'pi_framework') ?></label>
-            <input type="text" class="widefat" id="<?php echo $this->get_field_id('access_token_secret'); ?>" name="<?php echo $this->get_field_name('access_token_secret'); ?>" value="<?php echo $instance['access_token_secret']; ?>" />
+            <input type="text" class="widefat access_token_secret" id="<?php echo $this->get_field_id('access_token_secret'); ?>" name="<?php echo $this->get_field_name('access_token_secret'); ?>" value="<?php echo $instance['access_token_secret']; ?>" />
         </p>
 
         <?php
@@ -367,6 +376,7 @@ function getConnectionWithAccessToken($cons_key, $cons_secret, $oauth_token, $oa
 function ts_get_user_data($widget_options) {
 
     // twitter keys
+    $loklakapi = $widget_options['loklak_api'];
     $consumerkey = $widget_options['consumer_key'];
     $consumersecret = $widget_options['consumer_secret'];
     $accesstoken = $widget_options['access_token'];
