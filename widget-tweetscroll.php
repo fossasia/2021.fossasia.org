@@ -39,12 +39,12 @@ add_action('wp_enqueue_scripts', 'pi_ts_enqueue_styles');
 // Enqueue scripts
 function pi_ts_enqueue_scripts() {
     /* jQuery tweetscroll plugin */
-    wp_register_script('tweetscroll', TS_PLUGIN_URL . '/js/jquery.tweetscroll.js', array('jquery'));
+    wp_register_script('tweetscrolljs', TS_PLUGIN_URL . '/js/jquery.tweetscroll.js', array('jquery'));
     // load javascript scripts
-    wp_enqueue_script('tweetscroll');
+    wp_enqueue_script('tweetscrolljs');
 
     // declare object for URL
-    wp_localize_script('tweetscroll', 'PiTweetScroll', array('ajaxrequests' => admin_url('admin-ajax.php')));
+    wp_localize_script('tweetscrolljs', 'PiTweetScroll', array('ajaxrequests' => admin_url('admin-ajax.php')));
 }
 
 function pi_ts_admin_enqueue_scripts() {
@@ -83,7 +83,7 @@ class pi_tweet_scroll extends WP_Widget {
         global $post;
 
         extract($args);
-
+        print_r($instance);
         // Our variables from the widget settings
         $title = apply_filters('widget_title', $instance['title']);
         $username = $instance['username'];
@@ -388,7 +388,6 @@ function ts_get_user_data($widget_options) {
     $accesstoken = $widget_options['access_token'];
     $accesstokensecret = $widget_options['access_token_secret'];
     $notweets = $widget_options['limit'];
-
     $twitteruser = $widget_options['username'];
 
     // if username isn't array check if user separated usernames with comma
@@ -396,8 +395,9 @@ function ts_get_user_data($widget_options) {
         $twitteruser = explode(',', trim($twitteruser));
 
     // create twitter connection if loklak disabled
-    if ($loklakapi)
-        $connection = new Loklak();     
+    if ($loklakapi){
+        $connection = new Loklak(); 
+    }
     else
         $connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
 
@@ -419,7 +419,10 @@ function ts_get_user_data($widget_options) {
             // get tweets
             if ($loklakapi) {
                 $tweets = $connection->search('', null, null, $user, $notweets);
-                $tweets[] = $tweets->body->statuses;  
+                $fetchedTweets = json_decode($tweets, true);
+                $fetchedTweets = json_decode($fetchedTweets['body'], true);
+                $tweets[] = $fetchedTweets['statuses']; 
+                
             }  
             else
                 $tweets[] = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $user . "&count=" . $notweets);
@@ -432,10 +435,11 @@ function ts_get_user_data($widget_options) {
         }
     } else {
         if ($loklakapi) {
-            $tweets = $loklak->search('', null, null, $user, $notweets);
-            $tweets = json_decode($tweets, true);
-            $tweets = json_decode($tweets['body'], true);
-            $all_tweets = $tweets['statuses'];  
+            $tweets = $connection->search('', null, null, $twitteruser[0], $notweets); 
+            $fetchedTweets = json_decode($tweets, true);
+            $fetchedTweets = json_decode($fetchedTweets['body'], true);
+            $all_tweets = $fetchedTweets['statuses']; 
+              
         }  
         else
             $all_tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" . $twitteruser[0] . "&count=" . $notweets);
@@ -459,14 +463,6 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
     function pi_tweetscroll_ajax() {
         session_start();
-
-
-        if (!class_exists('Loklak') && $loklak_api)
-            require_once( TS_PLUGIN_DIR . "/loklak_php_api/loklak.php" ); //Path to twitteroauth library
-        else if(!$loklak_api)
-            require_once( TS_PLUGIN_DIR . "/twitter/twitteroauth.php" ); //Path to twitteroauth library
-
-
         $current_instance_id = $_GET['instance_id'];
         $current_post_id = $_GET['post_id'];
         $instances_options = get_option('widget_pi_tweet_scroll');
@@ -474,9 +470,13 @@ if (!function_exists('pi_tweetscroll_ajax')) {
 
         // filter widget options
         $widget_options = apply_filters('tweetscroll_widget_options', $widget_options, $current_instance_id, $current_post_id);
-
         $caching = $widget_options['caching'];
-
+        $loklak_api = $widget_options['loklak_api'];
+        if (!class_exists('Loklak') && $loklak_api) {
+            require_once( TS_PLUGIN_DIR . "/loklak_php_api/loklak.php" ); //Path to twitteroauth library
+        }
+        else if(!$loklak_api)
+            require_once( TS_PLUGIN_DIR . "/twitter/twitteroauth.php" ); //Path to twitteroauth library
         // Generate key  
         $key = 'tsw_' . $current_instance_id;
 
@@ -510,7 +510,8 @@ if (!function_exists('pi_tweetscroll_ajax')) {
             } else {
                 _e('Failed to retrieve tweets.');
             }
-        } else {
+        } 
+        else {
             // Soft expiration. $transient = array( expiration time, data)  
             if ($transient[0] !== 0 && (int) $transient[0] <= time()) {
 
