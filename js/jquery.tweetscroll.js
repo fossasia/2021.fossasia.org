@@ -278,9 +278,9 @@
 
                 //handle @reply filtering if required
                 if (tweetscrollOptions.replies === false) {
-                    if (!item.in_reply_to_status_id) {
+                    if (!item.in_reply_to_status_id  || item.in_reply_to_status_id === null) {
                         if (tweetscrollOptions.profile_image) {
-                            $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
+                            $tweetList.append('<li class="tweet_content_' + i + '" ><div class="profile-image"><img src="' + profileImage + '" alt="' + item.user.screen_name + '"/></div><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
 
                         } else {
                             $tweetList.append('<li class="tweet_content_' + i + '"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
@@ -288,26 +288,27 @@
                     }
                 } else {
                     if (tweetscrollOptions.profile_image) {
-                        $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
+                        $tweetList.append('<li class="tweet_content_' + i + '"><div class="profile-image"><img src="' + profileImage + '" alt="' + item.user.screen_name + '"/></div> <p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
                     } else {
                         $tweetList.append('<li class="tweet_content_' + i + '"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
                     }
                 }
                 //display the time of tweet if required
                 if (tweetscrollOptions.time == true) {
-                    var monthIndex = jQuery.inArray(item.created_at.substr(4, 3), shortMonths);
-
+                    if ((monthIndex = jQuery.inArray(item.created_at.substr(4, 3), shortMonths)) == -1) {
+                        monthIndex = parseInt(item.created_at.substr(5,2)) - 1;
+                    }
                     if (tweetscrollOptions.date_format == 'style1') {
                         tweetMonth = monthIndex + 1;
                         if (tweetMonth < 10) {
                             tweetMonth = '0' + tweetMonth;
                         }
-                        $tweetList.find('.tweet_link_' + i).append('<small> ' + item.created_at.substr(8, 2) + '/' + tweetMonth + '/' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small>');
+                        $tweetList.find('.tweet_link_' + i).append('<div><small> ' + item.created_at.substr(8, 2) + '/' + tweetMonth + '/' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small></div>');
                     } else if (tweetscrollOptions.date_format == 'style2') {
                         tweetMonth = allMonths[monthIndex];
-                        $tweetList.find('.tweet_link_' + i).append('<small> ' + tweetMonth + ' ' + item.created_at.substr(8, 2) + ', ' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small>');
+                        $tweetList.find('.tweet_link_' + i).append('<div><small> ' + tweetMonth + ' ' + item.created_at.substr(8, 2) + ', ' + item.created_at.substr(26, 4) + ' ' + item.created_at.substr(11, 8) + '</small></div>');
                     } else {
-                        $tweetList.find('.tweet_link_' + i).append('<small> ' + item.created_at + '</small>');
+                        $tweetList.find('.tweet_link_' + i).append('<div><small> ' + item.created_at + '</small></div>');
                     }
 
                 }

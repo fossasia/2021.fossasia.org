@@ -83,7 +83,6 @@ class pi_tweet_scroll extends WP_Widget {
         global $post;
 
         extract($args);
-        print_r($instance);
         // Our variables from the widget settings
         $title = apply_filters('widget_title', $instance['title']);
         $username = $instance['username'];
