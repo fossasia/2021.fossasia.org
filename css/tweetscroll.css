@@ -21,13 +21,13 @@
     background-position-y: 5px;
 }
 
-.tweet-list.twitter-logo li.profile-image{
-    background: none;
+.tweet-list li{
+    min-height: 60px;
 }
 
-.tweet-list li.profile-image{
-    padding-left: 60px;
-    min-height: 60px;
+.tweet-list .profile-image{
+    float: left;
+    padding-right: 10px;
 }
 
 span.hash{
