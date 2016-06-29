@@ -72,7 +72,6 @@
             if (tweetscrollOptions.animation == false) {
                 tweetscrollOptions.limit = tweetscrollOptions.visible_tweets;
             }
-
             //do a JSON request to twitter API
             $.getJSON(requestURL, tweetscrollOptions, function (data) {
                 $allTweets = createHtml(data, tweetscrollOptions);
@@ -82,6 +81,9 @@
                     animateTweets($allTweets);
                 }, tweetscrollOptions.delay);
 
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log("error " + errorThrown);
+                console.log("incoming Text " + jqXHR.responseText); 
             });
 
             function animateTweets($allTweets) {
@@ -261,7 +263,12 @@
                     }
                 }
 
-                var profileImage = item.user.profile_image_url;
+                if(item.user.profile_image_url_https){
+                    
+                    var profileImage = item.user.profile_image_url_https;
+                }
+                else
+                    var profileImage = item.user.profile_image_url;
                 //check for the first loop
                 if (i == 0) {
                     $tweetList = $('<ul class="tweet-list">');
@@ -271,7 +278,7 @@
 
                 //handle @reply filtering if required
                 if (tweetscrollOptions.replies === false) {
-                    if (item.in_reply_to_status_id === null) {
+                    if (!item.in_reply_to_status_id) {
                         if (tweetscrollOptions.profile_image) {
                             $tweetList.append('<li class="profile-image tweet_content_' + i + '" style="background: url(' + profileImage + ') no-repeat left top;"><p class="tweet_link_' + i + '">' + modifyTextAppearance() + '</p></li>');
 
