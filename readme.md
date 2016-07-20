@@ -1,4 +1,5 @@
 === TweetScroll Widget ===
+
 Contributors: pixel-industry,vmrkela
 Donate link: 
 Tags: twitter, tweets, twitter feed, scroll, slide, social, social network, connect, api 1.1, stream
@@ -18,6 +19,7 @@ This simple widget can be used in any website/blog.
 Twitter recently shutdown their API 1.0 and forces usage new API 1.1. Because of that change plugin requires creating Twitter application on Twitter Devs which is used for API calls.
 
 = Features =
+
 * Number of tweets to load.
 * Number of tweets to show.
 * Three animations styles: Slider up, Slider down, Fade and without animation.
@@ -43,6 +45,7 @@ For all questions use Support tab section or contact us through our [website](ht
 Recent updates to Twitter API (API v1.1) requires authentication to fetch Tweets. Please follow the steps below to start using TweetScroll widget:
 
 = Creating Twitter Application =
+
 Navigate to [Twitter Developers](https://dev.twitter.com/apps/) page and login using your Twitter credentials.
 Select ‘Create new application’ and enter the application details.
 * The name and description can be anything you like really, but you can’t use ‘Twitter’ in the name.
@@ -61,7 +64,11 @@ Use support tab above for any questions you have.
 
 = What are the plugin requirements =
 
-You need to obtain four keys from Twitter Devs:
+You can either use Loklak API by ticking the checkbox in Settings page 
+
+OR
+
+You would need to obtain four keys from Twitter Devs:
 * Consumer Key
 * Consumer Secret
 * Access Token
@@ -72,8 +79,16 @@ Read Installation section for details.
 == Screenshots ==
 
 1. Widget options
+
+	![Widget options](./img/screenshot-1.png)
+
 2. Frontend view of tweets
+
+	![Frontend View](./img/screenshot-2.jpg)
+
 3. Twitter Devs keys
+
+	![Twitter Dev keys](./img/screenshot-3.jpg)
 
 == Changelog ==
 
@@ -121,10 +136,13 @@ Read Installation section for details.
 * Added option for Delay time control.
 
 = 1.1 =
+
 Updates to AJAX calls.
 
 = 1.0 =
+
 Initial release
 
 == Upgrade notice ==
+
 Initial release.
