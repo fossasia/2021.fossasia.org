@@ -1,1 +1,1 @@
-https://2020.fossa
+https://2020.fossas
